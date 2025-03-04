@@ -18,4 +18,13 @@ const app = express();
 app.use(cors(corsOption));
 app.use(bodyParser.json());
 
-app.get('/api', ordersRouter)
+app.get('/api', ordersRouter);
+
+const serverConfig = {
+    port: parseInt(process.env.SERVER_PORT!) || 3000,
+    host: process.env.SERVER_HOST || 'locahost',
+}
+
+app.listen(serverConfig.port, serverConfig.host, () => {
+    console.log(`Server listening on port ${serverConfig.port}`);
+})
