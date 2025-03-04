@@ -2,7 +2,8 @@ import { Request, Response } from "express"
 import { database } from "../database/mysql"
 
 /**Controller that manages retrieval of orders from the database */
-const getOrdersController = async(res: Response): Promise<void> => {
+const getOrdersController = async(req: Request, res: Response) => {
+    req;
     const queryString = `
         SELECT * FROM orders;
     `
@@ -13,8 +14,8 @@ const getOrdersController = async(res: Response): Promise<void> => {
 
         (results.length > 0) ? res.status(200).json(results) : res.status(200).json({message: 'empty'})
     }catch(err: unknown){
-        console.error("Database error:", err);
         res.status(500).json({ message: "Order cannot be placed. Try again later." });
+        console.error("Database error:", err);
     }
 }
 

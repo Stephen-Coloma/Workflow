@@ -1,11 +1,12 @@
 import mysql2 from 'mysql2';
+import env from 'dotenv'
+env.config()
 
 const params = {
     host: process.env.MYSQL_HOST,
     database: process.env.MYSQL_DATABASE,
     user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    
+    password: process.env.MYSQL_PASSWORD,    
 }
 
 class Database{
@@ -16,7 +17,7 @@ class Database{
             host: params.host,
             database: params.database,
             user: params.user,
-            password: params.user,
+            password: params.password,
             connectionLimit: 10, //default, maximum of connection to create at once
             queueLimit: 0 //default 0, no limit
         })

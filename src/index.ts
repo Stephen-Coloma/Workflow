@@ -18,7 +18,7 @@ const app = express();
 app.use(cors(corsOption));
 app.use(bodyParser.json());
 
-app.get('/api', ordersRouter);
+app.use('/api', ordersRouter);
 
 const serverConfig = {
     port: parseInt(process.env.SERVER_PORT!) || 3000,

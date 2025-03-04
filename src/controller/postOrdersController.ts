@@ -3,9 +3,9 @@ import { Order } from "../dto/order"
 import { database } from "../database/mysql"
 
 /**Controller that manages creating a new order entry on the database. */
-const postOrdersController = async(req: Request, res: Response): Promise<void> => {
+const postOrdersController = async(req: Request<{},{}, Order>, res: Response) => {
     const order: Order = {
-        symbol: req.body.symbol,
+        symbol: req.body.symbol.toUpperCase(),
         price : req.body.price,
         quantity : req.body.quantity,
         orderType: req.body.orderType
