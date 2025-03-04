@@ -50,7 +50,7 @@ class Database{
     }
 
     /**Method that executes a database query */
-    public async processQuery(connection: mysql2.PoolConnection, queryString: string, values: any[] = []) {
+    public async processQuery(connection: mysql2.PoolConnection, queryString: string, values: any[] = []): Promise<any> {
         return new Promise((resolve, reject) => {
             connection.query(queryString, values, (err, result) => {
                 if(err){
