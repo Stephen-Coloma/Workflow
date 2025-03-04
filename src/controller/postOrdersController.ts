@@ -29,7 +29,6 @@ const postOrdersController = async(req: Request<{},{}, Order>, res: Response) =>
         }
         return;
     }catch(err: unknown){
-        console.error("Database error:", err);
         res.status(500).json({ message: "Order cannot be placed. Try again later." });
     };
 }
