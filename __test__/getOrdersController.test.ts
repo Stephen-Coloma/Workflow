@@ -59,6 +59,6 @@ describe("GET /orders", () => {
         await getOrdersController(req as Request, res as Response);
 
         expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({ message: "Order cannot be placed. Try again later." });
+        expect(res.json).toHaveBeenCalledWith({ message: "Order cannot be fetched. Try again later." });
     });
 });
