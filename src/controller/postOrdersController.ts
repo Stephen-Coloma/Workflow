@@ -3,7 +3,7 @@ import { Order } from "../dto/order"
 import { database } from "../database/mysql"
 
 /**Controller that manages creating a new order entry on the database. */
-const postOrdersController = async(req: Request<{}, {}, Order>, res: Response) => {
+const postOrdersController = async(req: Request, res: Response): Promise<void> => {
     const order: Order = {
         symbol: req.body.symbol,
         price : req.body.price,
@@ -13,7 +13,7 @@ const postOrdersController = async(req: Request<{}, {}, Order>, res: Response) =
 
     const queryString =`
         INSERT INTO orders (symbol, price, quantity, order_type)
-        VALUES (?,?,?,?)
+        VALUES (?,?,?,?);
     `
 
     const values = Object.values(order);
@@ -22,11 +22,15 @@ const postOrdersController = async(req: Request<{}, {}, Order>, res: Response) =
         const connection = await database.connect();
         const results = await database.processQuery(connection, queryString, values);
 
-        if(results.affectedRows > 0){
-            res.status(201).json({message: "Order created successfully."});
+        if (results.affectedRows > 0) {
+            res.status(201).json({ message: "Order created successfully." });
+        } else {
+            res.status(400).json({ message: "Failed to create order." });
         }
+        return;
     }catch(err: unknown){
-        return res.status(500).json({message: "Order cannot be placed. Try again later."})
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Order cannot be placed. Try again later." });
     };
 }
 export default postOrdersController

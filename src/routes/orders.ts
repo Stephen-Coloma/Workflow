@@ -1,6 +1,6 @@
 import { Router } from "express";
-import getOrdersController from "../controller/getOrdersController";
 import postOrdersController from "../controller/postOrdersController";
+import getOrdersController from "../controller/getOrdersController";
 
 export const ordersRouter = Router();
 
@@ -8,4 +8,4 @@ export const ordersRouter = Router();
 ordersRouter.get('/orders', getOrdersController);
 
 /**POST REQUEST */
-ordersRouter.post('/orders', postOrdersController);
+ordersRouter.post('/orders', postOrdersController)
