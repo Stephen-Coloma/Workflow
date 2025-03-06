@@ -1,0 +1,31 @@
+# The main goal of this workflow is to build sourcecode to check syntax and generate distribution folders.
+name: Build Application
+
+on: 
+  push:
+    branches: 
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node Server
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm' 
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Source Code
+        run: npm run build
+
+      - name: Check Distribution Files
+        run: ls -l ./dist
