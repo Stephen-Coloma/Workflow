@@ -2,22 +2,14 @@ services:
   backend:
     container_name: workflowBackend
     image: ${DOCKERHUB_USERNAME}/workflow-backend:latest
-    build: 
-      context: .
-      dockerfile: dockerfile.node
     ports:
       - 80:3000
     depends_on:
       - database
-    volumes:
-      - .:/app
 
   database:
     container_name: workflowDB
     image: ${DOCKERHUB_USERNAME}/workflow-database:latest
-    build: 
-      context: .
-      dockerfile: dockerfile.mysql
     restart: always
     ports:
       - 3306:3306

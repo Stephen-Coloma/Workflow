@@ -8,7 +8,7 @@ const postOrdersController = async(req: Request<{},{}, Order>, res: Response) =>
         symbol: req.body.symbol.toUpperCase(),
         price : req.body.price,
         quantity : req.body.quantity,
-        orderType: req.body.orderType
+        order_type: req.body.order_type
     }
 
     const queryString =`
