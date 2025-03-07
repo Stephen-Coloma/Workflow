@@ -70,3 +70,17 @@ jobs:
 
       - name: Run Tests in the Dist Folder
         run: npm run test
+
+  deploy: # This job deploys the source code to an AWS EC2 instance.
+    needs: [build, test]
+    runs-on: ubuntu-latest
+
+    steps:   
+    - name: Checkout the Repository
+      uses: actions/checkout@v4
+
+    - name: Test Docker Versions
+      run: |
+        docker version
+        docker compose version
+  
