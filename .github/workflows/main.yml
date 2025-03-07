@@ -1,0 +1,73 @@
+# The main goal of this workflow is to build, test and deploy the source code to an AWS EC2 instance.
+name: Build, Test and Deploy the Application
+
+on: 
+  push:
+    branches: 
+      - main
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  build: # This job builds the project to a dist folder
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node Server
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm' 
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Source Code
+        run: npm run build
+
+      - name: Check Distribution Files
+        run: ls -l ./dist
+
+      - name: Upload Dist Folder to Artifacts
+        uses: actions/upload-artifact@v4 # key is to read its documentation
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 1
+
+  test: # This job tests the source code in the dist folder from artifacts
+    needs: build # ensures build runs first before test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node Server
+        uses: actions/setup-node@4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Download Dist Folder from Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: . # destination is root of git repo
+          
+      - name: Verify Dist Folder Contents
+        run: ls -l ./dist
+
+      - name: Run Tests in the Dist Folder
+        run: npm run test
