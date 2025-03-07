@@ -63,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist
-          path: . # destination is root of git repo
+          path: ./ # destination is root of git repo
           
       - name: Verify Dist Folder Contents
         run: ls -l ./dist
