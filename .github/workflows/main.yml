@@ -63,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist
-          path: ./ # destination is root of git repo
+          path: dist/ # destination of zipped dist from upload must be downloaded in this folder
           
       - name: Verify Dist Folder Contents
         run: ls -l ./dist
