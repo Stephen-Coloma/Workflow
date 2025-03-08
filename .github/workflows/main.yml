@@ -88,17 +88,29 @@ jobs:
       with: 
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-        
-    - name: Compose Images and Push to Dockerhub
+
+    # This is inside the github actions runner
+    - name: Export Environment Variables, Compose Images and Push to Dockerhub
       run: |
-        docker compose -f deploy-compose.yaml build
+        export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+        export MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+        export MYSQL_USER=${{ secrets.MYSQL_USER }}
+        export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+        export MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+        docker compose build
         docker compose push
 
     - name: Copy deploy-compose.yaml file to EC2 Instance
       run: scp -o StrictHostKeyChecking=no -i aws_key.pem deploy-compose.yaml ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }}:/home/ubuntu/
 
-    - name: Login to Dockerhub, Pull Images and Run Docker Images in EC2
+    # This is inside EC2
+    - name: Pull Images from Dockerhub, Run Containers
       run: |
+        export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+        export MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+        export MYSQL_USER=${{ secrets.MYSQL_USER }}
+        export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+        export MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
         ssh -o StrictHostKeyChecking=no -i aws_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }} << 'EOF'
         docker stop $(docker ps -a -q) || true
         echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
