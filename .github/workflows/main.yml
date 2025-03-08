@@ -119,6 +119,6 @@ jobs:
         docker compose -f /home/ubuntu/deploy-compose.yaml pull
         docker compose -f /home/ubuntu/deploy-compose.yaml up
         echo "=========================="
-        echo "${{ SERVER_HOST }}"
-        echo "${{ SERVER_PORT }}"
+        echo "SERVER_HOST=$SERVER_HOST"
+        echo "SERVER_PORT=$SERVER_PORT"
         EOF
