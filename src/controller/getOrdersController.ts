@@ -14,6 +14,8 @@ const getOrdersController = async(req: Request, res: Response) => {
 
         (results.length > 0) ? res.status(200).json(results) : res.status(200).json({message: 'empty'})
     }catch(err: unknown){
+        console.log(err);
+        
         res.status(500).json({ message: "Order cannot be fetched. Try again later." });
     }
 }
