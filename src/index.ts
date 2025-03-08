@@ -26,5 +26,5 @@ const serverConfig = {
 }
 
 app.listen(serverConfig.port, serverConfig.host, () => {
-    console.log(`Server listening on port ${serverConfig.port}`);
+    console.log(`Server listening on host ${serverConfig.port} and port ${serverConfig.port}`);
 })
