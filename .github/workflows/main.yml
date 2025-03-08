@@ -114,7 +114,6 @@ jobs:
         docker stop $(docker ps -a -q) || true
         docker rm $(docker ps -a -q) || true
         docker rmi $(docker images) || true
-        source .env
         docker compose -f deploy-compose.yaml pull
         docker compose -f deploy-compose.yaml up -d
         EOF
