@@ -108,6 +108,8 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }} << 'EOF'
         export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+        export SERVER_HOST=${{ secrets.SERVER_HOST }}
+        export SERVER_PORT=${{ secrets.SERVER_PORT }}
         export MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
         export MYSQL_USER=${{ secrets.MYSQL_USER }}
         export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
