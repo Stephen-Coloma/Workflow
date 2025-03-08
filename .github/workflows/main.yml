@@ -115,5 +115,5 @@ jobs:
         docker stop $(docker ps -a -q) || true
         echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
         docker compose -f /home/ubuntu/deploy-compose.yaml pull
-        docker compose -f /home/ubuntu/deploy-compose.yaml up -d
+        docker compose -f /home/ubuntu/deploy-compose.yaml up
         EOF
