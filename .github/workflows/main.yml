@@ -115,10 +115,9 @@ jobs:
         export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
         export MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
         docker stop $(docker ps -a -q) || true
+        docker rm $(docker ps -a -q) || true
+        docker rmi $(docker images) || true
         echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
         docker compose -f /home/ubuntu/deploy-compose.yaml pull
         docker compose -f /home/ubuntu/deploy-compose.yaml up
-        echo "=========================="
-        echo "SERVER_HOST=$SERVER_HOST"
-        echo "SERVER_PORT=$SERVER_PORT"
         EOF

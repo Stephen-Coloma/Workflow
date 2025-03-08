@@ -22,7 +22,7 @@ app.use('/api', ordersRouter);
 
 const serverConfig = {
     port: parseInt(process.env.SERVER_PORT!) || 3000,
-    host: process.env.SERVER_HOST || 'localhost',
+    host: process.env.SERVER_HOST || '0.0.0.0',
 }
 
 app.listen(serverConfig.port, serverConfig.host, () => {
