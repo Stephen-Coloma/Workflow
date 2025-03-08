@@ -112,19 +112,11 @@ jobs:
     - name: Pull Images from Dockerhub, Run Containers
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }} << 'EOF'
-        echo "DOCKERHUB_USERNAME: $DOCKERHUB_USERNAME"
-        echo "SERVER_HOST: $SERVER_HOST"
-        echo "SERVER_PORT: $SERVER_PORT"
-        echo "MYSQL_HOST: $MYSQL_HOST"
-        echo "MYSQL_DATABASE: $MYSQL_DATABASE"
-        echo "MYSQL_USER: $MYSQL_USER"
-        echo "MYSQL_PASSWORD: $MYSQL_PASSWORD"
-        echo "MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD"
-
         docker stop $(docker ps -a -q) || true
         docker rm $(docker ps -a -q) || true
         docker rmi $(docker images) || true
+        echo "${{ secrets.DOCKERHUB_TOKEN }}"
         echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-        docker compose -f /home/ubuntu/deploy-compose.yaml pull
+        docker compose --env-file .env -f /home/ubuntu/deploy-compose.yaml pull
         docker compose -f /home/ubuntu/deploy-compose.yaml up -d
         EOF
