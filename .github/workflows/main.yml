@@ -100,22 +100,18 @@ jobs:
         docker compose build
         docker compose push
 
-    - name: Copy deploy-compose.yaml file to EC2 Instance
-      run: scp -o StrictHostKeyChecking=no deploy-compose.yaml ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }}:/home/ubuntu/
+    - name: Create .env file
+      run: |
+        echo "${{ secrets.ENV_FILE }}" > .env
+        cat .env
+
+    - name: Copy deploy-compose.yaml and .env file to EC2 Instance
+      run: scp -o StrictHostKeyChecking=no deploy-compose.yaml .env ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }}:/home/ubuntu/
 
     # This is inside EC2
     - name: Pull Images from Dockerhub, Run Containers
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }} << 'EOF'
-        export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
-        export SERVER_HOST="${{ secrets.SERVER_HOST }}"
-        export SERVER_PORT="${{ secrets.SERVER_PORT }}"
-        export MYSQL_HOST="${{ secrets.MYSQL_HOST }}"
-        export MYSQL_DATABASE="${{ secrets.MYSQL_DATABASE }}"
-        export MYSQL_USER="${{ secrets.MYSQL_USER }}"
-        export MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}"
-        export MYSQL_ROOT_PASSWORD="${{ secrets.MYSQL_ROOT_PASSWORD }}"
-
         echo "DOCKERHUB_USERNAME: $DOCKERHUB_USERNAME"
         echo "SERVER_HOST: $SERVER_HOST"
         echo "SERVER_PORT: $SERVER_PORT"
@@ -124,7 +120,7 @@ jobs:
         echo "MYSQL_USER: $MYSQL_USER"
         echo "MYSQL_PASSWORD: $MYSQL_PASSWORD"
         echo "MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD"
-        
+
         docker stop $(docker ps -a -q) || true
         docker rm $(docker ps -a -q) || true
         docker rmi $(docker images) || true
