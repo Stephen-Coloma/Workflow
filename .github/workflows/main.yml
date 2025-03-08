@@ -107,15 +107,14 @@ jobs:
     - name: Copy deploy-compose.yaml and .env file to EC2 Instance
       run: scp -o StrictHostKeyChecking=no deploy-compose.yaml .env ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }}:/home/ubuntu/
 
-    # This is inside EC2
+    # This is inside EC2, source .env loads the environment files
     - name: Pull Images from Dockerhub, Run Containers
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }} << 'EOF'
-        echo "Checking .env contents:"
-        cat .env  # Just to verify inside EC2
         docker stop $(docker ps -a -q) || true
         docker rm $(docker ps -a -q) || true
         docker rmi $(docker images) || true
+        source .env
         docker compose -f deploy-compose.yaml pull
-        docker compose --env-file .env -f deploy-compose.yaml up -d
+        docker compose -f deploy-compose.yaml up -d
         EOF
