@@ -115,6 +115,16 @@ jobs:
         export MYSQL_USER=${{ secrets.MYSQL_USER }}
         export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
         export MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+        
+        echo "DOCKERHUB_USERNAME: $DOCKERHUB_USERNAME"
+        echo "SERVER_HOST: $SERVER_HOST"
+        echo "SERVER_PORT: $SERVER_PORT"
+        echo "MYSQL_HOST: $MYSQL_HOST"
+        echo "MYSQL_DATABASE: $MYSQL_DATABASE"
+        echo "MYSQL_USER: $MYSQL_USER"
+        echo "MYSQL_PASSWORD: $MYSQL_PASSWORD"
+        echo "MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD"
+
         docker stop $(docker ps -a -q) || true
         docker rm $(docker ps -a -q) || true
         docker rmi $(docker images) || true
