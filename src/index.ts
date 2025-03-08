@@ -22,9 +22,17 @@ app.use('/api', ordersRouter);
 
 const serverConfig = {
     port: parseInt(process.env.SERVER_PORT!) || 3000,
-    host: process.env.SERVER_HOST || 'localhost',
+    host: process.env.SERVER_HOST || '0.0.0.0',
 }
 
 app.listen(serverConfig.port, serverConfig.host, () => {
-    console.log(`Server listening on port ${serverConfig.port}`);
+    console.log("DOCKERHUB_USERNAME:", process.env.DOCKERHUB_USERNAME || "Not Set");
+    console.log("SERVER_HOST:", process.env.SERVER_HOST || "Not Set");
+    console.log("SERVER_PORT:", process.env.SERVER_PORT || "Not Set");
+    console.log("MYSQL_HOST:", process.env.MYSQL_HOST || "Not Set");
+    console.log("MYSQL_DATABASE:", process.env.MYSQL_DATABASE || "Not Set");
+    console.log("MYSQL_USER:", process.env.MYSQL_USER || "Not Set");
+    console.log("MYSQL_PASSWORD:", process.env.MYSQL_PASSWORD || "Not Set");
+    console.log("MYSQL_ROOT_PASSWORD:", process.env.MYSQL_ROOT_PASSWORD || "Not Set");
+    console.log(`Server listening on host ${serverConfig.host} and port ${serverConfig.port}`);
 })
