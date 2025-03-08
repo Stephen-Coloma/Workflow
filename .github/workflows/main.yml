@@ -6,7 +6,6 @@ on:
     branches: 
       - main
   pull_request:
-    types: opened
     branches:
       - main
 
@@ -79,8 +78,30 @@ jobs:
     - name: Checkout the Repository
       uses: actions/checkout@v4
 
-    - name: Test Docker Versions
+    - name: Load Private SSH Key
       run: |
-        docker version
-        docker compose version
-  
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > aws_key.pem
+        chmod 600 aws_key.pem
+      
+    - name: Login to Dockerhub
+      uses: docker/login-action@v3
+      with: 
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Compose Images and Push to Dockerhub
+      run: |
+        docker compose -f deploy-compose.yaml build
+        docker compose push
+
+    - name: Copy deploy-compose.yaml file to EC2 Instance
+      run: scp -o StrictHostKeyChecking=no -i aws_key.pem deploy-compose.yaml ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }}:/home/ubuntu/
+
+    - name: Login to Dockerhub, Pull Images and Run Docker Images in EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no -i aws_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }} << 'EOF'
+        docker stop $(docker ps -a -q) || true
+        echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+        docker compose -f /home/ubuntu/deploy-compose.yaml pull
+        docker compose -f /home/ubuntu/deploy-compose.yaml up -d
+        EOF
