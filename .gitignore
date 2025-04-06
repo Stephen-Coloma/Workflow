@@ -4,9 +4,6 @@ node_modules
 # environment variables
 *.env
 
-# copy of mysql database
-*.sql
-
 # distribution files
 /dist
 
